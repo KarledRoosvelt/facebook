@@ -313,6 +313,7 @@ elif page == "Analyse Exploratoire":
 
         st.markdown("**Top 10 (valeurs les plus élevées)**")
         top10 = df_kpi.nlargest(10, selected)[["age_group","gender",selected,"ad_spend","clicks","impressions","approved_conversions"]].copy()
+        top10 = top10.loc[:, ~top10.columns.duplicated()]
         st.dataframe(top10, use_container_width=True)
 
     st.markdown("---")
@@ -490,7 +491,7 @@ else:
         a4.metric("CPM hist (€)", f"{h_cpm:.2f}" if pd.notna(h_cpm) else "—")
 
     st.caption(
-        "⚠️ Ceci est une **simulation prédictive (What-If)** basée sur l’historique : "
+        "⚠️  **simulation prédictive (What-If)** basée sur l’historique : "
         "le modèle apprend la relation entre budget (ad_spend) et résultats (impressions/clics/conversions) "
         "en tenant compte de l’âge et du genre."
     )
