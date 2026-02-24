@@ -86,11 +86,16 @@ def add_kpis(df):
 
     df = df.copy()
 
-    df["ctr_pct"] = safe_div(df["clicks"], df["impressions"]) * 100
-    df["cpc"] = safe_div(df["ad_spend"], df["clicks"])
-    df["cpa"] = safe_div(df["ad_spend"], df["approved_conversions"])
-    df["cpm"] = safe_div(df["ad_spend"], df["impressions"]) * 1000
-    df["conversion_rate_pct"] = safe_div(df["approved_conversions"], df["clicks"]) * 100
+    # Remplacer les 0 pour éviter division par 0
+    impressions = df["impressions"].replace(0, np.nan)
+    clicks = df["clicks"].replace(0, np.nan)
+    conversions = df["approved_conversions"].replace(0, np.nan)
+
+    df["ctr_pct"] = (df["clicks"] / impressions) * 100
+    df["cpc"] = df["ad_spend"] / clicks
+    df["cpa"] = df["ad_spend"] / conversions
+    df["cpm"] = (df["ad_spend"] / impressions) * 1000
+    df["conversion_rate_pct"] = (df["approved_conversions"] / clicks) * 100
 
     return df
 
